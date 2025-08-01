@@ -1,13 +1,13 @@
-from agents.route_agent import run_route_agent
+# train_assistant/main.py
+# Run this script from the parent directory: python -m train_assistant.main
 
-def main():
-    print("Train Assistant is running...")
-    while True:
-        user_input = input("How can I help you? ")
-        if user_input.lower() in ["exit", "quit"]:
-            break
-        response = run_route_agent(user_input)
-        print(response)
+from train_assistant.agent.agent_executor import agent_executor
 
 if __name__ == "__main__":
-    main()
+    print("Type 'exit' or 'quit' to stop.")
+    while True:
+        user_input = input("\nAsk something: ")
+        if user_input.lower() in ["exit", "quit"]:
+            break
+        response = agent_executor.invoke({"input": user_input})
+        print("\n🧠 Agent Response:\n", response["output"])
