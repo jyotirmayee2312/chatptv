@@ -1,0 +1,1 @@
+A LangChain-based assistant using Bedrock Claude to help users find train routes and disruptions.
