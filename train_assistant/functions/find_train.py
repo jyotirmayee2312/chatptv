@@ -1,6 +1,7 @@
 # train_assistant/functions/find_train.py
 
 import requests
+from train_assistant.context.conversation import context
 
 def get_upcoming_trains(from_station: str, to_station: str) -> str:
     """
@@ -9,6 +10,7 @@ def get_upcoming_trains(from_station: str, to_station: str) -> str:
     url = "http://52.63.39.167/api/find-trains"
     try:
         response = requests.get(url, params={"from": from_station, "to": to_station})
+        context.update_last_route(f"{from_station.strip()} to {to_station.strip()}")
         response.raise_for_status()
         data = response.json()
     except Exception as e:
