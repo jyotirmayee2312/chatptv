@@ -9,8 +9,10 @@ def check_disruptions_between_stations(from_station: str, to_station: str) -> st
         )
         train_resp.raise_for_status()
         train_data = train_resp.json()
+        # print("train_data", train_data)
 
         departures = train_data.get("departures", [])
+        # print("departures", departures)
         if not departures:
             return f"No departures found from {from_station} to {to_station}."
 
