@@ -20,4 +20,5 @@ agent_executor = AgentExecutor(
     agent=router_agent,
     tools=tools,
     verbose=True,
+    return_intermediate_steps=False, 
 )
