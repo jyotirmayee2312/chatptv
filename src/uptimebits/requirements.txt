@@ -1,0 +1,6 @@
+
+langchain_aws
+langchain==0.3.26
+langchain-community==0.3.26
+faiss-cpu==1.7.4
+numpy<2

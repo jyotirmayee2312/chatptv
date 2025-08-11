@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Document Extraction
+
+  SAM Template for Uptimebits
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Handler: main.lambda_handler
+    Architectures:
+      - x86_64
+    Tracing: Active
+    Environment:
+      Variables:
+        LOG_LEVEL: INFO
+
+Resources:    
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Cors:
+        AllowOrigin: "'*'"
+        AllowHeaders: "'*'"
+        AllowMethods: "'*'"
+
+  chatbuddyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/uptimebits/
+      Timeout: 890
+      MemorySize: 2048
+      Policies:
+        - Statement:
+            - Sid: "FullAccessToS3Bucket"
+              Effect: "Allow"
+              Action:
+                - "s3:*"
+              Resource:
+                - "arn:aws:s3:::chathistorybucket-chatbuddy"
+                - "arn:aws:s3:::chathistorybucket-chatbuddy/*"
+        - Statement:
+            - Sid: "BedrockScopedAccess"
+              Effect: "Allow"
+              Action:
+                - "bedrock:InvokeModel"
+                - "bedrock:InvokeModelWithResponseStream"
+              Resource:
+                - "arn:aws:bedrock:*::foundation-model/*"
+      Events:
+        ExtractAPI:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /extract
+            Method: POST
+
+  ResponseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/Response_api/
+      Timeout: 890
+      MemorySize: 2048
+      Policies:
+        - Statement:
+            - Sid: "FullAccessToS3Bucket"
+              Effect: "Allow"
+              Action:
+                - "s3:*"
+              Resource:
+                - "arn:aws:s3:::chathistorybucket-chatbuddy"
+                - "arn:aws:s3:::chathistorybucket-chatbuddy/*"
+        - Statement:
+            - Sid: "BedrockScopedAccess"
+              Effect: "Allow"
+              Action:
+                - "bedrock:InvokeModel"
+                - "bedrock:InvokeModelWithResponseStream"
+              Resource:
+                - "arn:aws:bedrock:*::foundation-model/*"
+      Events:
+        ExtractAPI:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /response
+            Method: POST
