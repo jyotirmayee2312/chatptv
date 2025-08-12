@@ -14,7 +14,9 @@ class TrainInput(BaseModel):
 # def train_tool(from_station: str, to_station: str) -> str:
 def train_tool(from_station: str, to_station: str, date: Optional[str] = None, time: Optional[str] = None) -> str:
     """
-    Tool: Get upcoming train departures between two stations. Include date and time if provided.
+    Tool: Get upcoming train departures between two stations. 
+    Use ONLY when the query is about trains, train times, schedules, 
+    routes, or departures between two stations.
     """
     # return get_upcoming_trains(from_station, to_station)
     return get_upcoming_trains(from_station, to_station, date, time)
