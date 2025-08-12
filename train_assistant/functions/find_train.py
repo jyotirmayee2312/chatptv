@@ -30,8 +30,8 @@ def get_upcoming_trains(from_station: str, to_station: str, date: str = None, ti
 
     results = []
     for dep in departures[:3]:  # Show next 3 departures
-        sched = dep.get("scheduled_departure_utc", "Unknown")
-        est = dep.get("estimated_departure_utc", "Unknown")
+        sched = dep.get("scheduled_departure_melbourne", "Unknown")
+        est = dep.get("estimated_departure_melbourne", "Unknown")
         platform = dep.get("platform_number", "Unknown")
         run_id = dep.get("run_ref", "N/A")
         route_name = dep.get("route_name", "Unknown")
