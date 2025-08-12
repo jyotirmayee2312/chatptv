@@ -20,11 +20,8 @@ router_prompt = ChatPromptTemplate.from_messages([
 - Avoid external stylesheets or custom fonts – use only inline HTML/CSS.
 
 ###Tool Selection Instructions:
-- If the user query contains both "train" and "v/line" (or "vline"), select the *combined_timetable_tool.
-- If the query mentions only "v/line" (or variants), select vline_train_tool.
-- If the query mentions "train" or "trains" but NOT "v/line", select timetable_tool.
-- If the user query asks about delays or disruptions, select disruption_tool.
-- For any query unrelated to trains, weather, taxis, or other topics, select irrelevant_tool*.
+- If the user query contains the word "train" or "trains" but NOT any mention of "v/line" or "vline", ALWAYS select the **timetable_tool** (train only).
+- Only select **combined_timetable_tool** when BOTH "train" AND "v/line" (or no transport mode mentioned at all) are detected.
 
 ### Example Answer Format:
 <b>Here's what I can help with:</b><br>
