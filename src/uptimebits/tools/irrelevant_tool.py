@@ -11,5 +11,5 @@ def handle_irrelevant_query(input: str) -> str:
     """
     return respond_to_irrelevant_query()
 
-# train_assistant/tools/irrelevant_tool.py
+
 
