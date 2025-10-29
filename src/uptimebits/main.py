@@ -1,19 +1,48 @@
 import json
 from datetime import datetime, timezone
-from agent.agent_executor import create_agent_with_tools
-from tools.chat_history import load_chat, save_chat, make_json_qa_tool
-from agent.tool_router import tools as all_tools
+import os
 from functions.datetime_parser import (
     parse_natural_datetime,
     get_melbourne_date_string,
     get_melbourne_time_string,
 )
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+os.environ["AWS_ACCESS_KEY_ID"]=os.getenv("AWS_ACCESS_KEY_ID")
+os.environ["AWS_SECRET_ACCESS_KEY"]=os.getenv("AWS_SECRET_ACCESS_KEY")
+os.environ["AWS_DEFAULT_REGION"]=os.getenv("AWS_DEFAULT_REGION")
+os.environ["CHAT_HISTORY_BUCKET"]=os.getenv("CHAT_HISTORY_BUCKET")
+# from Memory import MemoryManager
+# from Memory_hook import MemoryHookProvider
+# from bedrock_agentcore.runtime import BedrockAgentCoreApp
+# from Context import app_context
+from agent.agent_executor import create_agent_with_tools
+from tools.chat_history import load_chat, save_chat, make_json_qa_tool
+from agent.tool_router import tools as all_tools
+# memoryManager= MemoryManager()
+# Memory_name="chatvtv_memory"
+
+# memoryManager.create_memory()
+# client=memoryManager.get_client()
+# memory_id=memoryManager.get_memory_id()
+# print("Memory_id : ",memory_id)
+
+# agent_hook= MemoryHookProvider(client,memory_id)
+# session_id=app_context.session_id
+# actor_id= app_context.actor_id
+
 
 def lambda_handler(event, _):
     body = json.loads(event["body"])
     user_input = body.get("question", "")
     message_id = body.get("messageid")
-
+    # session_id= body.get("session_id")
+    # actor_id= body.get("actor_id")
+    # app_context.session_id=session_id
+    # app_context.actor_id=actor_id
     print("messageid", message_id)
 
     # --- Parse date/time from user query (Melbourne timezone) ---
@@ -57,16 +86,19 @@ def lambda_handler(event, _):
         "time": parsed_time            # explicit structured param
     }
 
-    response = agent_executor_with_history.invoke(invoke_payload)
+    response = agent_executor_with_history(user_input)
 
-    # --- Extract answer ---
-    if isinstance(response.get("output"), list) and len(response["output"]) > 0:
-        answer_html = response["output"][0].get("text", "")
-    elif isinstance(response.get("output"), str):
-        answer_html = response["output"]
+    output = response
+    # print(output)
+    # print(type(output))
+    if isinstance(output, list) and len(output) > 0:
+        answer_html = output[0].get("text", "")
+    elif isinstance(output, str):
+        answer_html = output
     else:
-        answer_html = ""
+        answer_html = str(output)
 
+    # print("answer :",answer_html)  
     # --- Save conversation history ---
     chat_history.append({
         "question": user_input,
@@ -122,7 +154,7 @@ if __name__ == "__main__":
         event = {
             "body": json.dumps({
                 "question": question,
-                "messageid": custom_message_id
+                "messageid": custom_message_id,
             })
         }
 

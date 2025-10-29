@@ -3,14 +3,14 @@ import requests
 import difflib
 import json
 import importlib.resources as pkg_resources
-
+import os
 # # Load route_reference.json
 # with pkg_resources.files("context").joinpath("route_reference.json").open("r", encoding="utf-8") as f:
 #     ROUTE_DATA = json.load(f)
 
 # Load route_reference.json from S3
 s3 = boto3.client("s3")
-bucket = "chathistorybucket-chatbuddy"
+bucket = os.environ.get("CHAT_HISTORY_BUCKET", "chathistorybucket-chatbuddy")
 key = "route_reference/route_reference.json"
 
 obj = s3.get_object(Bucket=bucket, Key=key)

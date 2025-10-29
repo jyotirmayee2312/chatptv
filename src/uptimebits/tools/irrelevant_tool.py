@@ -1,6 +1,7 @@
 # train_assistant/tools/irrelevant_tool.py
 
-from langchain.tools import tool
+# from langchain.tools import tool
+from strands import tool
 from functions.irrelevant_handler import respond_to_irrelevant_query
 
 

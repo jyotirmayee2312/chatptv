@@ -1,5 +1,6 @@
 from typing import Optional
-from langchain.tools import tool
+# from langchain.tools import tool
+from strands import tool
 from pydantic import BaseModel, Field
 from functions.find_combined import get_upcoming_combined
 from functions.datetime_parser import parse_natural_datetime, get_melbourne_date_string, get_melbourne_time_string
@@ -22,7 +23,7 @@ class CombinedTrainInput(BaseModel):
     )
 
 
-@tool(args_schema=CombinedTrainInput)
+@tool
 def combined_timetable_tool(
     query: Optional[str] = None,
     from_station: str = None,

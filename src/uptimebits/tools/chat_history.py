@@ -1,6 +1,7 @@
 
 from typing import Optional, List, Dict, Any
-from langchain.tools import tool
+# from langchain.tools import tool
+from strands import tool
 from pydantic import BaseModel, Field
 import json
 import os
@@ -122,7 +123,7 @@ def is_travel_related_query(question: str) -> bool:
     return has_travel_keywords or has_context_indicators
 
 # --- LangChain Tool (Logger with carry-forward) ---
-@tool(args_schema=JSONAgentInput)
+@tool
 def json_qa_tool(
     question: str,
     message_id: Optional[str] = None,

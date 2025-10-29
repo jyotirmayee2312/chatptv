@@ -1,10 +1,12 @@
 # tools/disruption_line.py
-from langchain.tools import tool
+# from langchain.tools import tool
+from strands import tool
 from pydantic import BaseModel, Field
 from typing import Optional
 import importlib.resources as pkg_resources
 import json
 import boto3
+import os
 
 # import functions
 from functions.disruption_line import _check_disruptions_on_line, _search_across_types
@@ -15,7 +17,7 @@ from functions.disruption_line import _check_disruptions_on_line, _search_across
 
 # Load route_reference.json from S3
 s3 = boto3.client("s3")
-bucket = "chathistorybucket-chatbuddy"
+bucket = os.environ.get("CHAT_HISTORY_BUCKET", "chathistorybucket-chatbuddy")
 key = "route_reference/route_reference.json"
 
 obj = s3.get_object(Bucket=bucket, Key=key)
@@ -33,7 +35,7 @@ class LineDisruptionInput(BaseModel):
     )
 
 
-@tool(args_schema=LineDisruptionInput)
+@tool
 def check_disruptions_from_line(route_type: Optional[int] = None, line_name: Optional[str] = None) -> str:
     """
     LangChain tool wrapper — validates inputs and delegates to functions/disruption_line.

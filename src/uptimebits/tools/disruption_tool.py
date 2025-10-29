@@ -1,4 +1,4 @@
-from langchain.tools import tool
+# from langchain.tools import tool
 from functions.disruption_ab import (
     check_disruptions_between_stations,
     check_disruptions_between_stations_vline
@@ -6,8 +6,9 @@ from functions.disruption_ab import (
 
 # train_assistant/tools/disruption_tool.py
 
-from langchain.tools import tool
+# from langchain.tools import tool
 from pydantic import BaseModel
+from strands import tool ,Agent
 from functions.disruption_ab import (
     check_disruptions_between_stations,
     check_disruptions_between_stations_vline
@@ -18,7 +19,7 @@ class RouteDisruptionInput(BaseModel):
     from_station: str
     to_station: str
 
-@tool(args_schema=RouteDisruptionInput)
+@tool
 def check_disruptions_from_route(route_type: int, from_station: str, to_station: str) -> str:
     """
     Tool: Check disruptions between two stations.

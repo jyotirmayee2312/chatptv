@@ -1,10 +1,11 @@
 
 # train_assistant/tools/timetable_tool.py
 from typing import Optional
-from langchain.tools import tool
+# from langchain.tools import tool
 from pydantic import BaseModel, Field
 from functions.find_train import get_upcoming_trains
 from functions.datetime_parser import parse_natural_datetime
+from strands import tool, Agent
 
 class TrainInput(BaseModel):
     query: str = Field(..., description="Full user query including stations and date/time")
@@ -13,7 +14,7 @@ class TrainInput(BaseModel):
     date: Optional[str] = Field(None, description="Date of travel in YYYY-MM-DD format (e.g., '2025-09-06')")
     time: Optional[str] = Field(None, description="Time of travel in HH:MM AM/PM format (e.g., '10:00 PM')")
 
-@tool(args_schema=TrainInput)
+@tool
 def train_tool(query: str, from_station: str, to_station: str, date: Optional[str] = None, time: Optional[str] = None) -> str:
     """
     Tool: Get upcoming train departures between two stations. 
