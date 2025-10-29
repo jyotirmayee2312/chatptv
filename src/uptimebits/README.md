@@ -94,5 +94,4 @@ sam deploy --guided
 - Natural language processing for transport queries
 - Real-time timetable information
 - Service disruption alerts
-- Persistent chat history
 - Date/time parsing for journey planning
