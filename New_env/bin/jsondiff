@@ -1,4 +1,4 @@
-#!/home/ubuntu/chatptv/chatptv/New_env/bin/python3
+#!/home/ubuntu/chatptv/New_env/bin/python3.11
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function

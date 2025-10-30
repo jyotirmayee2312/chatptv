@@ -26,7 +26,7 @@ class MemoryHookProvider(HookProvider):
                 memory_id=self.memory_id,
                 actor_id=actor_id,
                 session_id=session_id,
-                k=15
+                k=25
             )
             
             print(f"🔍 DEBUG: Found {len(recent_turns)} recent turns in memory")

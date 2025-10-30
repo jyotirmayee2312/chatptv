@@ -33,7 +33,7 @@ llm = ChatBedrock(
 #     return_intermediate_steps=False
 # )
 
-def create_agent_with_tools(custom_tools):
+def create_agent_with_tools(custom_tools,session_id,actor_id,agent_hook):
     """Create agent executor with custom tools."""
     # router_agent = create_tool_calling_agent(
     #     llm=llm,
@@ -50,7 +50,8 @@ def create_agent_with_tools(custom_tools):
     return Agent(
     system_prompt=router_prompt,
     model="anthropic.claude-3-haiku-20240307-v1:0",
+    hooks=[agent_hook],
     tools=custom_tools,
-    # state={"actor_id": actor_id, "session_id": session_id}
+    state={"actor_id": actor_id, "session_id": session_id}
 )
     

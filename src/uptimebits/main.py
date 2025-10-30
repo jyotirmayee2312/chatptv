@@ -15,34 +15,34 @@ os.environ["AWS_ACCESS_KEY_ID"]=os.getenv("AWS_ACCESS_KEY_ID")
 os.environ["AWS_SECRET_ACCESS_KEY"]=os.getenv("AWS_SECRET_ACCESS_KEY")
 os.environ["AWS_DEFAULT_REGION"]=os.getenv("AWS_DEFAULT_REGION")
 os.environ["CHAT_HISTORY_BUCKET"]=os.getenv("CHAT_HISTORY_BUCKET")
-# from Memory import MemoryManager
-# from Memory_hook import MemoryHookProvider
-# from bedrock_agentcore.runtime import BedrockAgentCoreApp
-# from Context import app_context
+from Memory import MemoryManager
+from Memory_hook import MemoryHookProvider
+from bedrock_agentcore.runtime import BedrockAgentCoreApp
+from Context import app_context
 from agent.agent_executor import create_agent_with_tools
 from tools.chat_history import load_chat, save_chat, make_json_qa_tool
 from agent.tool_router import tools as all_tools
-# memoryManager= MemoryManager()
-# Memory_name="chatvtv_memory"
+memoryManager= MemoryManager()
+Memory_name="chatvtv_memory"
 
-# memoryManager.create_memory()
-# client=memoryManager.get_client()
-# memory_id=memoryManager.get_memory_id()
-# print("Memory_id : ",memory_id)
+memoryManager.create_memory()
+client=memoryManager.get_client()
+memory_id=memoryManager.get_memory_id()
+print("Memory_id : ",memory_id)
 
-# agent_hook= MemoryHookProvider(client,memory_id)
-# session_id=app_context.session_id
-# actor_id= app_context.actor_id
+agent_hook= MemoryHookProvider(client,memory_id)
+session_id=app_context.session_id
+actor_id= app_context.actor_id
 
 
 def lambda_handler(event, _):
     body = json.loads(event["body"])
     user_input = body.get("question", "")
     message_id = body.get("messageid")
-    # session_id= body.get("session_id")
-    # actor_id= body.get("actor_id")
-    # app_context.session_id=session_id
-    # app_context.actor_id=actor_id
+    session_id= message_id
+    actor_id= message_id
+    app_context.session_id=session_id
+    app_context.actor_id=actor_id
     print("messageid", message_id)
 
     # --- Parse date/time from user query (Melbourne timezone) ---
@@ -70,7 +70,7 @@ def lambda_handler(event, _):
             bound_tools.append(t)
 
     # --- Build agent with bound tools ---
-    agent_executor_with_history = create_agent_with_tools(bound_tools)
+    agent_executor_with_history = create_agent_with_tools(bound_tools,session_id,actor_id,agent_hook)
 
     # --- Make a tagged user input so LLM/tools always "see" parsed datetime ---
     # Example: "can I take a train tomorrow at 10am\n[PARSED_DATE=2025-09-16][PARSED_TIME=10:00 AM]"
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         event = {
             "body": json.dumps({
                 "question": question,
-                "messageid": custom_message_id,
+                "messageid": custom_message_id
             })
         }
 
@@ -163,6 +163,6 @@ if __name__ == "__main__":
         try:
             body = json.loads(response["body"])
             answer = body["data"]["conversation"][0]["answer"]
-            print("Assistant:", answer, "\n")
+            print("\nAssistant:", answer, "\n")
         except Exception as e:
             print("Error parsing response:", e, "\n")

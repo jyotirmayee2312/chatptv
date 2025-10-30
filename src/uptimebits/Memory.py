@@ -8,7 +8,7 @@ import traceback
 logger = logging.getLogger(__name__)
 
 class MemoryManager:
-    def __init__(self, memory_name="Hackathon_sales_assistant"):
+    def __init__(self, memory_name="chatptv"):
         self.client = MemoryClient()
         self.memory_name = memory_name
         self.memory_id = None
@@ -16,13 +16,13 @@ class MemoryManager:
     def create_memory(self):
         """Create or reuse existing memory"""
         try:
-            print("🧠 Creating Memory with Long-Term Strategy...")
+            print("🧠 Creating Memory with Short-Term Strategy...")
 
             memory = self.client.create_memory_and_wait(
                 name=self.memory_name,
                 strategies=[],  # or [StrategyType.LTM]
-                description="Sales agent short-term memory",
-                event_expiry_days=10
+                description="agent short-term memory",
+                event_expiry_days=20
             )
 
             self.memory_id = memory['id']
